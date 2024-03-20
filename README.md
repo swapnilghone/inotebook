@@ -5,7 +5,8 @@ Welcome to the iNoteBook GitHub repository!
 
 iNoteBook is a personal notes app built using the MERN stack (MongoDB, Express.js, React, Node.js). It provides users with the ability to sign up or log in securely. Once logged in, users can create, view, edit, and manage their personal notes efficiently.User authentication is handled using JSON Web Tokens (JWT).
 
-![](demo.gif)
+![](demo1.gif)
+![](demo2.gif)
 
 ## Installation
 
