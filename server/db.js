@@ -6,6 +6,5 @@ const connectToMongo = () =>{
 } 
 
 mongoose.connection.on('connected', () => console.log('connected'));
-mongoose.connection.on()
 
 module.exports =  connectToMongo;
