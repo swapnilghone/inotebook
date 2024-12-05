@@ -22,7 +22,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "nodemon": "nodemon --env-file=.env",
-    "both": "concurrently \"npm run start\" \"npm run nodemon backend/index.js\""
+    "both": "concurrently \"npm run start\" \"npm run nodemon ../backend/index.js\""
   },
   "eslintConfig": {
     "extends": [

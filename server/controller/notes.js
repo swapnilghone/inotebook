@@ -1,11 +1,7 @@
-const express = require('express');
-const router = express.Router();
-const { body, validationResult } = require('express-validator');
-const authenticateToken = require('../middleware/authenticateToken');
 const Note = require('../models/Note');
- 
-// Route 1: get all the notes GET "/api/notes/new". login required
-router.get('/',authenticateToken, async (req, res) => {
+const { validationResult } = require('express-validator');
+
+const getUserNotes = async (req, res) => {
 
     try {
         const notes = await Note.find({user:req.userId});
@@ -13,13 +9,9 @@ router.get('/',authenticateToken, async (req, res) => {
     } catch (err) {
         res.status(500).send(`Internal Server Error ${err.message}`);
     }
-})
+}
 
-// Route 2: create note for user POST "/api/notes/". login required
-router.post('/',authenticateToken,[
-    body('title','Title cannot be empty').notEmpty(),
-    body('description','Description should be of min 10 characters').notEmpty().isLength({min:10}),
-],async (req,res) => {
+const createUserNote = async (req,res) => {
 
     // error handling if there are any validation errors
     const result = validationResult(req);
@@ -38,10 +30,9 @@ router.post('/',authenticateToken,[
     } catch (err) {
         res.status(500).send(`some error occured: ${err.message}`);
     }
-});
+}
 
-// Route 3: Update user note PUT "api/notes/". login required
-router.put('/:id',authenticateToken,[],async(req,res) => {
+const updateUserNote = async(req,res) => {
     try {
         const {title,description,tag} = req.body;
         const noteID = req.params.id;
@@ -65,10 +56,9 @@ router.put('/:id',authenticateToken,[],async(req,res) => {
     } catch (err) {
         res.status(500).send(`Internal Server Error: ${err.message}`);
     }
-})
+}
 
-// Route 4: Delete user note DELETE "api/notes/delete". login required
-router.delete('/:id',authenticateToken,async (req,res) => {
+const deleteUserNote = async (req,res) => {
     try {
         const noteId = req.params.id;
         let note = await Note.findById(noteId);
@@ -87,6 +77,6 @@ router.delete('/:id',authenticateToken,async (req,res) => {
     } catch (err) {
         res.status(500).send(`Internal Server Error: ${err.message}`);
     }
-})
+}
 
-module.exports = router;
+module.exports = {getUserNotes,createUserNote,updateUserNote,deleteUserNote}

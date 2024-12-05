@@ -1,18 +1,11 @@
-const express = require('express')
-const { body, validationResult } = require('express-validator');
+const { validationResult } = require('express-validator');
 const User = require('../models/User');
-const router = express.Router();
+
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const authenticateToken = require('../middleware/authenticateToken');
 const JWT_SECRET = process.env.JWT_SECRET;
 
-// ROUTE 1: create user using: POST "/api/auth/create/user". No Login required
-router.post('/createuser',[
-    body('name','Enter Valid Nmae').notEmpty().isLength({min:3}),
-    body('email','Enter Vaid Email').notEmpty().isEmail(),
-    body('password','Enter Valid Password').notEmpty().isLength({min:6})
-],async (req, res) => {
+const createUser = async (req,res) => {
 
     // error handling if there are any validation errors
     const result = validationResult(req);
@@ -51,14 +44,10 @@ router.post('/createuser',[
     }  catch (err) {
         res.status(500).send(`some error occured: ${err.message}`);
     }
-});
+}
 
+const loginUser = async (req,res) => {
 
-// ROUTE 2: login user using: POST "/api/auth/login" No login required
-router.post('/login',[
-    body('email','Please enter valid email').isEmail(),
-    body('password','Password Cannot be empty').exists()
-],async (req,res) => {
     console.log(process.env.JWT_SECRET);
     // error handling if there are any validation errors
     const result = validationResult(req);
@@ -86,10 +75,9 @@ router.post('/login',[
     } catch(err){
         res.status(500).send(`Internal server Error: ${err.message}`);
     }
-});
+}
 
-// ROUTE 3: get user data POST "/api/auth/get_user_data" : Login User
-router.post("/get_user_data",authenticateToken, async (req,res) => {
+const getUserData =  async (req,res) => {
 
     try {
         let userId = req.userId;
@@ -98,11 +86,9 @@ router.post("/get_user_data",authenticateToken, async (req,res) => {
     } catch (err) {
         res.status(500).send(`Internal server Error: ${err.message}`);
     }
-});
+}
 
-// Route 4: update user data PUT "/api/auth/update_user" : Login Required
-
-router.put('/update_user',authenticateToken,async (req,res) =>{
+const updateUser = async (req,res) =>{
     try {
         let userId = req.userId;
         const {name,password} = req.body;
@@ -124,6 +110,6 @@ router.put('/update_user',authenticateToken,async (req,res) =>{
     } catch (err) {
         res.status(500).send(`Internal Server Error: ${err.message}`);
     }
-})
+}
 
-module.exports = router
+module.exports = {createUser,loginUser,getUserData,updateUser}
